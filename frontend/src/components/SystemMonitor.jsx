@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import "../App.css";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const SystemMonitor = () => {
   const [metrics, setMetrics] = useState(null);
+  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchMetrics = async () => {
@@ -10,6 +12,14 @@ const SystemMonitor = () => {
       const response = await fetch("http://localhost:8000/metrics");
       const data = await response.json();
       setMetrics(data);
+      
+      const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+      setHistory(prev => {
+        const newHistory = [...prev, { time, memory: parseFloat(data.memoryUsagePercent) }];
+        if (newHistory.length > 20) newHistory.shift();
+        return newHistory;
+      });
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching metrics:", error);
@@ -53,6 +63,32 @@ const SystemMonitor = () => {
             {metrics.healthScore}%
           </div>
           <p className="metric-desc">Overall System Reliability</p>
+        </div>
+
+        <div className="metric-card glass col-span-2">
+          <h3>Live Memory Usage</h3>
+          <div style={{ width: '100%', height: 250, marginTop: '1rem' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={history}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <XAxis dataKey="time" stroke="#a0a0a0" fontSize={12} />
+                <YAxis domain={[0, 100]} stroke="#a0a0a0" fontSize={12} unit="%" />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                  itemStyle={{ color: '#00ff88' }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="memory" 
+                  stroke="#00ff88" 
+                  strokeWidth={3} 
+                  dot={{ r: 4, fill: '#00ff88', strokeWidth: 2, stroke: '#242424' }}
+                  activeDot={{ r: 6 }} 
+                  isAnimationActive={false} 
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         <div className="metric-card glass">
