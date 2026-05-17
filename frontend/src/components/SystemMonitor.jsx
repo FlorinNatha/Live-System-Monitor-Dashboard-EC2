@@ -65,7 +65,29 @@ const SystemMonitor = () => {
           <p className="metric-desc">Overall System Reliability</p>
         </div>
 
-        <div className="metric-card glass col-span-2">
+        <div className="metric-card glass">
+          <h3>Memory Usage</h3>
+          <div className="metric-value">
+            {metrics.memoryUsagePercent}%
+          </div>
+          <div className="progress-bar">
+            <div 
+              className="progress-fill" 
+              style={{ width: `${metrics.memoryUsagePercent}%`, backgroundColor: metrics.memoryUsagePercent > 80 ? '#ff3366' : '#00ff88' }}
+            ></div>
+          </div>
+          <p className="metric-desc">{metrics.usedMemory} GB / {metrics.totalMemory} GB Used</p>
+        </div>
+
+        <div className="metric-card glass">
+          <h3>System Uptime</h3>
+          <div className="metric-value">
+            {metrics.uptimeHours} <span className="unit">hrs</span>
+          </div>
+          <p className="metric-desc">Continuous operation time</p>
+        </div>
+
+        <div className="metric-card glass col-span-3">
           <h3>Live Memory Usage</h3>
           <div style={{ width: '100%', height: 250, marginTop: '1rem' }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -92,34 +114,39 @@ const SystemMonitor = () => {
         </div>
 
         <div className="metric-card glass">
-          <h3>Memory Usage</h3>
-          <div className="metric-value">
-            {metrics.memoryUsagePercent}%
-          </div>
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${metrics.memoryUsagePercent}%`, backgroundColor: metrics.memoryUsagePercent > 80 ? '#ff3366' : '#00ff88' }}
-            ></div>
-          </div>
-          <p className="metric-desc">{metrics.usedMemory} GB / {metrics.totalMemory} GB Used</p>
-        </div>
-
-        <div className="metric-card glass">
-          <h3>System Uptime</h3>
-          <div className="metric-value">
-            {metrics.uptimeHours} <span className="unit">hrs</span>
-          </div>
-          <p className="metric-desc">Continuous operation time</p>
-        </div>
-
-        <div className="metric-card glass col-span-2">
           <h3>Hardware Specifications</h3>
           <ul className="hw-list">
             <li><strong>CPU Model:</strong> {metrics.cpuModel}</li>
             <li><strong>Cores:</strong> {metrics.cpuCores} Core Processor</li>
+            <li><strong>Clock Speed:</strong> {(metrics.cpuSpeed / 1000).toFixed(2)} GHz ({metrics.cpuSpeed} MHz)</li>
             <li><strong>Architecture:</strong> {metrics.architecture} ({metrics.platform})</li>
           </ul>
+        </div>
+
+        <div className="metric-card glass col-span-2">
+          <h3>Top Active Processes</h3>
+          <div style={{ overflowX: 'auto', marginTop: '1rem' }}>
+            <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#888' }}>
+                  <th style={{ padding: '0.5rem' }}>PID</th>
+                  <th style={{ padding: '0.5rem' }}>Process Name</th>
+                  <th style={{ padding: '0.5rem' }}>CPU %</th>
+                  <th style={{ padding: '0.5rem' }}>Memory %</th>
+                </tr>
+              </thead>
+              <tbody>
+                {metrics.topProcesses && metrics.topProcesses.map((proc, idx) => (
+                  <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td style={{ padding: '0.5rem', color: '#a0a0a0' }}>{proc.pid}</td>
+                    <td style={{ padding: '0.5rem', color: '#fff', fontWeight: '500' }}>{proc.name}</td>
+                    <td style={{ padding: '0.5rem', color: '#ffcc00' }}>{proc.cpu}%</td>
+                    <td style={{ padding: '0.5rem', color: '#00ff88' }}>{proc.mem}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
