@@ -9,10 +9,10 @@ const SystemMonitor = () => {
 
   const fetchMetrics = async () => {
     try {
-      const response = await fetch("http://localhost:8000/metrics");
+      const response = await fetch("http://54.90.92.40:8000/metrics");
       const data = await response.json();
       setMetrics(data);
-      
+
       const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
       setHistory(prev => {
         const newHistory = [...prev, { time, memory: parseFloat(data.memoryUsagePercent) }];
@@ -38,7 +38,7 @@ const SystemMonitor = () => {
   }
 
   const getStatusColor = (status) => {
-    switch(status) {
+    switch (status) {
       case 'Optimal': return '#00ff88';
       case 'Warning': return '#ffcc00';
       case 'Critical': return '#ff3366';
@@ -71,8 +71,8 @@ const SystemMonitor = () => {
             {metrics.memoryUsagePercent}%
           </div>
           <div className="progress-bar">
-            <div 
-              className="progress-fill" 
+            <div
+              className="progress-fill"
               style={{ width: `${metrics.memoryUsagePercent}%`, backgroundColor: metrics.memoryUsagePercent > 80 ? '#ff3366' : '#00ff88' }}
             ></div>
           </div>
@@ -95,18 +95,18 @@ const SystemMonitor = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis dataKey="time" stroke="#a0a0a0" fontSize={12} />
                 <YAxis domain={[0, 100]} stroke="#a0a0a0" fontSize={12} unit="%" />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
                   itemStyle={{ color: '#00ff88' }}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="memory" 
-                  stroke="#00ff88" 
-                  strokeWidth={3} 
+                <Line
+                  type="monotone"
+                  dataKey="memory"
+                  stroke="#00ff88"
+                  strokeWidth={3}
                   dot={{ r: 4, fill: '#00ff88', strokeWidth: 2, stroke: '#242424' }}
-                  activeDot={{ r: 6 }} 
-                  isAnimationActive={false} 
+                  activeDot={{ r: 6 }}
+                  isAnimationActive={false}
                 />
               </LineChart>
             </ResponsiveContainer>
