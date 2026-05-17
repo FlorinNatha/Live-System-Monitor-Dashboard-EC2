@@ -49,7 +49,7 @@ const SystemMonitor = () => {
   return (
     <div className="monitor-container">
       <header className="monitor-header">
-        <h1>Live System Monitor Dashboard</h1>
+        <h1>Live EC2 System Monitor</h1>
         <div className="status-badge" style={{ borderColor: getStatusColor(metrics.status), color: getStatusColor(metrics.status) }}>
           <span className="pulse" style={{ backgroundColor: getStatusColor(metrics.status) }}></span>
           {metrics.status} System
