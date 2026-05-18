@@ -106,14 +106,17 @@
 3. Serve the built React app (Vite outputs to `dist` directory) using `serve`:
 
    ```bash
+   # Make sure you are in the 'frontend' directory, NOT inside 'dist'
+   cd ~/Live-System-Monitor-Dashboard-EC2/frontend
    sudo npm install -g serve
-   serve -s dist
-   serve -s dist -l 3001
+   serve -s dist -l 3000
    ```
 
 4. Serve on the default HTTP port (80) as a super user:
 
    ```bash
+   # Make sure you are in the 'frontend' directory
+   cd ~/Live-System-Monitor-Dashboard-EC2/frontend
    sudo apt update
    sudo apt install nodejs npm
    sudo npm install -g serve
